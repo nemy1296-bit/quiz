@@ -1,307 +1,486 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="it">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="theme-color" content="#101827">
-<title>Quiz Statistica — Analizzatore</title>
-<style>
-:root{color-scheme:dark;--bg:#0b1220;--panel:#121d2e;--panel2:#17253a;--line:#2b3b53;--txt:#edf3fb;--muted:#9eb0c7;--accent:#77b7ff;--green:#70d6a0;--red:#ff8b8b;--yellow:#ffd27a}
-*{box-sizing:border-box}body{margin:0;background:linear-gradient(140deg,#0b1220,#101b2c 55%,#0b1220);color:var(--txt);font:15px/1.5 system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;min-height:100vh}
-main{width:min(960px,calc(100% - 28px));margin:34px auto 60px}
-header{margin-bottom:22px}h1{font-size:clamp(26px,5vw,38px);line-height:1.12;margin:0 0 8px;letter-spacing:-.8px}header p{color:var(--muted);margin:0}
-.panel{background:rgba(18,29,46,.96);border:1px solid var(--line);border-radius:18px;padding:20px;margin:14px 0;box-shadow:0 14px 40px #0002}
-h2{font-size:18px;margin:0 0 14px}.row{display:flex;gap:12px;align-items:center;flex-wrap:wrap}
-label{display:block;font-weight:650;margin:0 0 7px}
-input[type=password],input[type=text]{width:100%;background:#0b1524;border:1px solid var(--line);border-radius:10px;color:var(--txt);padding:12px 13px;font-size:15px;outline:none}
-input:focus{border-color:var(--accent);box-shadow:0 0 0 3px #77b7ff20}
-.field{flex:1;min-width:230px}.hint,.small{color:var(--muted);font-size:13px}.hint{margin:8px 0 0}
-.drop{border:1.5px dashed #49617f;border-radius:14px;background:#0d1929;padding:22px;text-align:center;cursor:pointer;transition:.15s}
-.drop.drag{border-color:var(--accent);background:#132942}.drop strong{display:block;font-size:16px}.drop span{color:var(--muted);font-size:13px}
-input[type=file]{display:none}
-button{border:0;border-radius:11px;padding:12px 18px;font-size:15px;font-weight:750;cursor:pointer;background:var(--accent);color:#071525}
-button:disabled{opacity:.45;cursor:not-allowed}.secondary{background:#263a55;color:var(--txt)}.danger{background:#4a2630;color:#ffd9dd}
-#analyze{width:100%;margin-top:15px;padding:15px;font-size:16px}
-.status{margin-top:12px;color:var(--muted);font-size:14px;min-height:22px}.status.error{color:var(--red)}.status.ok{color:var(--green)}
-.files{display:grid;grid-template-columns:repeat(auto-fill,minmax(125px,1fr));gap:10px;margin-top:14px}
-.thumb{position:relative;background:#0b1524;border:1px solid var(--line);border-radius:10px;overflow:hidden}
-.thumb img{width:100%;height:95px;object-fit:cover;display:block}.thumb div{font-size:11px;color:var(--muted);padding:6px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.thumb button{position:absolute;right:5px;top:5px;padding:3px 7px;border-radius:7px;background:#101827dd;color:white}
-.result-head{display:flex;justify-content:space-between;gap:10px;align-items:center;flex-wrap:wrap}
-.answer{border:1px solid var(--line);border-radius:13px;padding:15px;margin:12px 0;background:#0e1929}
-.answer-top{display:flex;justify-content:space-between;gap:10px;align-items:center;margin-bottom:7px}
-.qnum{font-weight:800;color:var(--accent)}.confidence{font-size:12px;color:var(--muted);border:1px solid var(--line);border-radius:20px;padding:3px 8px}
-.letter{font-size:20px;font-weight:850;color:var(--green);margin-right:7px}.answer-text{font-weight:650}
-.explain{color:#c4d0df;margin:9px 0 0}.calc{background:#17253a;border-radius:9px;padding:10px;margin-top:9px;white-space:pre-wrap;font-family:ui-monospace,SFMono-Regular,monospace;font-size:13px}
-.flag{color:var(--yellow);font-size:13px;margin-top:8px}
-.warning{border-left:3px solid var(--yellow);padding:9px 12px;background:#2a2417;color:#f8dfad;border-radius:7px;font-size:13px;margin-top:12px}
-.hidden{display:none!important}
-footer{color:var(--muted);font-size:12px;text-align:center;margin-top:22px}
-@media(max-width:600px){main{width:calc(100% - 18px);margin:20px auto 40px}.panel{padding:15px}.row .field{min-width:100%}}
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Risolutore Quiz Universitari di Statistica</title>
+  <style>
+    :root {
+      --primary: #1e3a8a;
+      --primary-hover: #1e40af;
+      --bg: #f8fafc;
+      --card: #ffffff;
+      --text: #0f172a;
+      --border: #cbd5e1;
+      --success: #16a34a;
+    }
+
+    * {
+      box-sizing: border-box;
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    }
+
+    body {
+      background-color: var(--bg);
+      color: var(--text);
+      margin: 0;
+      padding: 20px;
+      display: flex;
+      justify-content: center;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 800px;
+      background: var(--card);
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    }
+
+    h1 {
+      margin-top: 0;
+      font-size: 1.5rem;
+      color: var(--primary);
+      border-bottom: 2px solid var(--bg);
+      padding-bottom: 12px;
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    label {
+      display: block;
+      font-weight: 600;
+      margin-bottom: 8px;
+      font-size: 0.95rem;
+    }
+
+    input[type="password"], select {
+      width: 100%;
+      padding: 10px 12px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      font-size: 1rem;
+    }
+
+    .drop-zone {
+      border: 2px dashed var(--primary);
+      border-radius: 10px;
+      padding: 30px;
+      text-align: center;
+      background: #eff6ff;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .drop-zone:hover {
+      background: #dbeafe;
+    }
+
+    .drop-zone p {
+      margin: 0;
+      color: var(--primary);
+      font-weight: 500;
+    }
+
+    #fileInput {
+      display: none;
+    }
+
+    .preview-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+      gap: 12px;
+      margin-top: 15px;
+    }
+
+    .preview-item {
+      position: relative;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      overflow: hidden;
+      background: #f1f5f9;
+      text-align: center;
+    }
+
+    .preview-item img {
+      width: 100%;
+      height: 100px;
+      object-fit: cover;
+      display: block;
+    }
+
+    .preview-item span {
+      display: block;
+      font-size: 0.8rem;
+      font-weight: 600;
+      padding: 4px;
+      background: #fff;
+    }
+
+    .remove-btn {
+      position: absolute;
+      top: 4px;
+      right: 4px;
+      background: rgba(220, 38, 38, 0.9);
+      color: white;
+      border: none;
+      border-radius: 50%;
+      width: 22px;
+      height: 22px;
+      cursor: pointer;
+      font-size: 12px;
+      line-height: 1;
+    }
+
+    button.submit-btn {
+      width: 100%;
+      background: var(--primary);
+      color: white;
+      border: none;
+      padding: 14px;
+      font-size: 1.05rem;
+      font-weight: 600;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    button.submit-btn:hover {
+      background: var(--primary-hover);
+    }
+
+    button.submit-btn:disabled {
+      background: #94a3b8;
+      cursor: not-allowed;
+    }
+
+    .result-box {
+      margin-top: 25px;
+      padding: 20px;
+      background: #f1f5f9;
+      border-radius: 8px;
+      border-left: 5px solid var(--success);
+      display: none;
+    }
+
+    .result-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+
+    .result-string {
+      font-family: 'Courier New', monospace;
+      font-size: 1.3rem;
+      font-weight: bold;
+      color: var(--text);
+      word-break: break-all;
+      background: #fff;
+      padding: 12px;
+      border-radius: 6px;
+      border: 1px solid var(--border);
+    }
+
+    .copy-btn {
+      background: var(--success);
+      color: white;
+      border: none;
+      padding: 6px 12px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 0.85rem;
+      font-weight: 600;
+    }
+
+    .loader {
+      display: none;
+      text-align: center;
+      margin-top: 20px;
+      font-weight: 600;
+      color: var(--primary);
+    }
+  </style>
 </head>
 <body>
-<main>
-<header>
-  <h1>Quiz Statistica</h1>
-  <p>Carica le immagini, analizza i quesiti e controlla le risposte con attenzione ai trabocchetti.</p>
-</header>
 
-<section class="panel">
-  <h2>1. Collega Gemini</h2>
-  <div class="field">
-    <label for="apiKey">Chiave API Gemini</label>
-    <input id="apiKey" type="password" autocomplete="off" spellcheck="false" placeholder="Incolla qui la tua chiave API">
+<div class="container">
+  <h1>Risolutore Quiz di Statistica (AI)</h1>
+
+  <div class="form-group">
+    <label for="apiKey">Google Gemini API Key</label>
+    <input type="password" id="apiKey" placeholder="Incolla qui la tua API Key (AIzaSy...)">
   </div>
-  <p class="hint">La chiave resta soltanto nella memoria temporanea di questa pagina: non viene salvata. Quando chiudi o aggiorni la pagina dovrai inserirla di nuovo.</p>
-  <div class="warning">Uso personale: la chiave viene inviata dal browser a Google e può essere individuata da chi ispeziona le richieste di rete. Non condividere questa pagina con altre persone e imposta limiti di utilizzo sulla chiave.</div>
-</section>
 
-<section class="panel">
-  <h2>2. Carica le domande</h2>
-  <label class="drop" id="drop">
-    <strong>Trascina qui le immagini oppure clicca per selezionarle</strong>
-    <span>Massimo 24 immagini · JPG, PNG o WEBP · meglio immagini nitide e dritte</span>
-    <input id="files" type="file" accept="image/jpeg,image/png,image/webp" multiple>
-  </label>
-  <div class="row" style="justify-content:space-between;margin-top:12px">
-    <span class="small" id="fileCount">Nessuna immagine selezionata</span>
-    <button class="secondary" id="clearFiles" type="button" disabled>Rimuovi tutte</button>
+  <div class="form-group">
+    <label for="modelSelect">Modello AI (consigliato Pro per calcoli complessi)</label>
+    <select id="modelSelect">
+      <option value="gemini-2.5-pro">Gemini 2.5 Pro (Massima precisione matematica)</option>
+      <option value="gemini-2.5-flash">Gemini 2.5 Flash (Più veloce)</option>
+    </select>
   </div>
-  <div class="files" id="previews"></div>
-  <button id="analyze" type="button" disabled>ANALIZZA LE DOMANDE</button>
-  <div id="status" class="status" role="status" aria-live="polite"></div>
-</section>
 
-<section class="panel hidden" id="resultsPanel">
-  <div class="result-head">
-    <h2 style="margin:0">3. Risultati</h2>
-    <div class="row">
-      <button class="secondary" id="copy" type="button">Copia risposte</button>
-      <button class="secondary" id="print" type="button">Stampa</button>
+  <div class="form-group">
+    <label>Immagini delle Domande (in ordine sequenziale)</label>
+    <div class="drop-zone" id="dropZone">
+      <p>Clicca qui o trascina le immagini delle domande (PNG, JPG, WEBP)</p>
+      <input type="file" id="fileInput" multiple accept="image/*">
     </div>
+    <div class="preview-grid" id="previewGrid"></div>
   </div>
-  <div id="summary" class="small" style="margin-top:8px"></div>
-  <div id="results"></div>
-  <div class="warning">Le risposte sono un supporto allo studio, non una garanzia di correttezza assoluta. Verifica con le dispense del corso soprattutto i quesiti segnalati come dubbi.</div>
-</section>
-<footer>Analizzatore personale · Le immagini vengono inviate a Google Gemini per l'analisi.</footer>
-</main>
+
+  <button class="submit-btn" id="solveBtn">Analizza e Risolvi Quiz</button>
+
+  <div class="loader" id="loader">
+    Elaborazione statistica e verifica matematica in corso... Attendere.
+  </div>
+
+  <div class="result-box" id="resultBox">
+    <div class="result-header">
+      <strong>Risposte Esatte:</strong>
+      <button class="copy-btn" id="copyBtn">Copia Risultato</button>
+    </div>
+    <div class="result-string" id="resultOutput"></div>
+  </div>
+</div>
+
 <script>
-(() => {
-  "use strict";
-  const MODEL = "gemini-3.8-flash";
-  const MAX_FILES = 24;
-  const MAX_TOTAL_BYTES = 12 * 1024 * 1024;
-  const MAX_FILE_BYTES = 3 * 1024 * 1024;
-  const $ = id => document.getElementById(id);
-  let selected = [];
-  let lastResults = [];
+  const dropZone = document.getElementById('dropZone');
+  const fileInput = document.getElementById('fileInput');
+  const previewGrid = document.getElementById('previewGrid');
+  const solveBtn = document.getElementById('solveBtn');
+  const loader = document.getElementById('loader');
+  const resultBox = document.getElementById('resultBox');
+  const resultOutput = document.getElementById('resultOutput');
+  const copyBtn = document.getElementById('copyBtn');
 
-  const setStatus = (message, type="") => {
-    $("status").textContent = message;
-    $("status").className = "status " + type;
-  };
+  let selectedFiles = [];
 
-  function updateUI() {
-    $("fileCount").textContent = selected.length
-      ? `${selected.length} di ${MAX_FILES} immagini selezionate`
-      : "Nessuna immagine selezionata";
-    $("clearFiles").disabled = selected.length === 0;
-    $("analyze").disabled = selected.length === 0;
-    $("previews").innerHTML = "";
-    selected.forEach((file, i) => {
-      const url = URL.createObjectURL(file);
-      const card = document.createElement("div");
-      card.className = "thumb";
-      const img = document.createElement("img");
-      img.src = url; img.alt = `Anteprima ${i+1}`;
-      const name = document.createElement("div");
-      name.textContent = `${i+1}. ${file.name}`;
-      const remove = document.createElement("button");
-      remove.type = "button"; remove.textContent = "×"; remove.title = "Rimuovi immagine";
-      remove.addEventListener("click", () => {
-        selected.splice(i, 1); updateUI();
-      });
-      card.append(img, name, remove);
-      $("previews").append(card);
-    });
+  // Gestione click e drag-and-drop
+  dropZone.addEventListener('click', () => fileInput.click());
+
+  dropZone.addEventListener('dragover', (e) => {
+    e.preventDefault();
+    dropZone.style.background = '#dbeafe';
+  });
+
+  dropZone.addEventListener('dragleave', () => {
+    dropZone.style.background = '#eff6ff';
+  });
+
+  dropZone.addEventListener('drop', (e) => {
+    e.preventDefault();
+    dropZone.style.background = '#eff6ff';
+    handleFiles(e.dataTransfer.files);
+  });
+
+  fileInput.addEventListener('change', (e) => {
+    handleFiles(e.target.files);
+  });
+
+  function handleFiles(files) {
+    const newFiles = Array.from(files).filter(file => file.type.startsWith('image/'));
+    selectedFiles = [...selectedFiles, ...newFiles];
+    renderPreviews();
   }
 
-  function addFiles(list) {
-    const incoming = Array.from(list || []);
-    if (!incoming.length) return;
-    const allowed = incoming.filter(f => ["image/jpeg","image/png","image/webp"].includes(f.type));
-    if (allowed.length !== incoming.length) setStatus("Alcuni file non sono immagini JPG, PNG o WEBP e sono stati ignorati.", "error");
-    for (const file of allowed) {
-      if (selected.length >= MAX_FILES) { setStatus("Hai raggiunto il limite di 24 immagini.", "error"); break; }
-      if (file.size > MAX_FILE_BYTES) { setStatus(`"${file.name}" supera 3 MB ed è stata ignorata.`, "error"); continue; }
-      const total = selected.reduce((n,f)=>n+f.size,0) + file.size;
-      if (total > MAX_TOTAL_BYTES) { setStatus("Il totale delle immagini non può superare 12 MB.", "error"); break; }
-      selected.push(file);
-    }
-    updateUI();
-    if (selected.length) setStatus("Immagini pronte. Controlla che il testo sia leggibile.", "ok");
+  function removeFile(index) {
+    selectedFiles.splice(index, 1);
+    renderPreviews();
   }
 
-  $("drop").addEventListener("click", e => { if (e.target.id !== "files") $("files").click(); });
-  $("files").addEventListener("change", e => { addFiles(e.target.files); e.target.value = ""; });
-  $("drop").addEventListener("dragover", e => { e.preventDefault(); $("drop").classList.add("drag"); });
-  $("drop").addEventListener("dragleave", () => $("drop").classList.remove("drag"));
-  $("drop").addEventListener("drop", e => { e.preventDefault(); $("drop").classList.remove("drag"); addFiles(e.dataTransfer.files); });
-  $("clearFiles").addEventListener("click", () => { selected=[]; updateUI(); setStatus(""); });
-
-  function fileToData(file) {
-    return new Promise((resolve,reject) => {
+  function renderPreviews() {
+    previewGrid.innerHTML = '';
+    selectedFiles.forEach((file, index) => {
       const reader = new FileReader();
-      reader.onload = () => resolve(String(reader.result).split(",")[1]);
-      reader.onerror = () => reject(new Error(`Impossibile leggere ${file.name}`));
+      reader.onload = (e) => {
+        const div = document.createElement('div');
+        div.className = 'preview-item';
+        div.innerHTML = `
+          <button class="remove-btn" onclick="removeFile(${index})" title="Rimuovi">×</button>
+          <img src="${e.target.result}" alt="Domanda ${index + 1}">
+          <span>Domanda ${index + 1}</span>
+        `;
+        previewGrid.appendChild(div);
+      };
       reader.readAsDataURL(file);
     });
   }
 
-  const schema = {
-    type: "OBJECT",
-    properties: {
-      results: {
-        type: "ARRAY",
-        items: {
-          type: "OBJECT",
-          properties: {
-            image_number: {type:"INTEGER"},
-            question: {type:"STRING"},
-            answer_letter: {type:"STRING"},
-            answer_text: {type:"STRING"},
-            explanation: {type:"STRING"},
-            calculation: {type:"STRING"},
-            confidence: {type:"STRING", enum:["alta","media","bassa"]},
-            warning: {type:"STRING"}
-          },
-          required:["image_number","question","answer_letter","answer_text","explanation","calculation","confidence","warning"]
-        }
-      },
-      general_notes: {type:"ARRAY", items:{type:"STRING"}}
-    },
-    required:["results","general_notes"]
-  };
-
-  const instruction = `Sei un analista rigoroso di quiz universitari di STATISTICA. Riceverai una sequenza di immagini; ogni immagine può contenere una domanda a scelta multipla. Analizzale tutte, mantenendo l'ordine delle immagini.
-REGOLE OBBLIGATORIE:
-1) Trascrivi il testo della domanda in modo fedele e identifica tutte le opzioni visibili.
-2) Prima di scegliere, individua il comando esatto: quale è corretta, quale è falsa/errata, quale NON è, quale è esclusa. Presta attenzione a NON, FALSA, ERRATA, ESCLUSIVAMENTE, SEMPRE, MAI, TRANNE, tranne che, tutte/nessuna.
-3) Non scegliere in base a somiglianza lessicale. Valuta il significato statistico e le definizioni.
-4) Per esercizi numerici: individua formula, dati, sostituzione, passaggi e risultato; confronta il risultato con le opzioni. Non inventare dati mancanti.
-5) Se più opzioni sembrano corrette, il testo è tagliato/illeggibile, o manca un dato, non indovinare: scrivi "DA VERIFICARE", confidence "bassa" o "media" e spiega il motivo nel campo warning.
-6) Se l'immagine non contiene una domanda leggibile, segnalalo chiaramente.
-7) answer_letter deve essere la lettera/etichetta dell'opzione scelta (A, B, C, D...) se leggibile; se non c'è, scrivi "—". answer_text deve riportare il testo completo dell'opzione scelta. Se incerta, scrivi "DA VERIFICARE".
-8) explanation deve essere breve ma specifica. calculation deve contenere formula, sostituzione e risultato solo se è un calcolo; altrimenti stringa vuota.
-9) Non dichiarare mai certezza assoluta. confidence alta solo quando domanda, opzioni e ragionamento sono tutti chiari.
-10) Non aggiungere conoscenze non richieste e non alterare le opzioni.
-Rispondi esclusivamente secondo lo schema JSON richiesto.`;
-
-  function extractResponse(data) {
-    const parts = data?.candidates?.[0]?.content?.parts || [];
-    const raw = parts.map(p => p.text || "").join("").trim();
-    if (!raw) throw new Error(data?.promptFeedback?.blockReason
-      ? `Richiesta bloccata: ${data.promptFeedback.blockReason}`
-      : "Gemini non ha restituito testo. Riprova con immagini più nitide.");
-    const clean = raw.replace(/^```(?:json)?\s*/i,"").replace(/\s*```$/,"");
-    try { return JSON.parse(clean); }
-    catch {
-      const start=clean.indexOf("{"), end=clean.lastIndexOf("}");
-      if (start>=0 && end>start) return JSON.parse(clean.slice(start,end+1));
-      throw new Error("La risposta del modello non è in formato leggibile. Riprova.");
-    }
-  }
-
-  function renderResults(data) {
-    lastResults = Array.isArray(data.results) ? data.results : [];
-    $("results").innerHTML = "";
-    $("resultsPanel").classList.remove("hidden");
-    $("summary").textContent = `${lastResults.length} quesiti elaborati · Controlla in particolare quelli con affidabilità media o bassa.`;
-    lastResults.forEach((r,i) => {
-      const article=document.createElement("article"); article.className="answer";
-      const top=document.createElement("div"); top.className="answer-top";
-      const num=document.createElement("span"); num.className="qnum"; num.textContent=`IMMAGINE ${r.image_number || i+1}`;
-      const conf=document.createElement("span"); conf.className="confidence"; conf.textContent=`Affidabilità: ${r.confidence || "non indicata"}`;
-      top.append(num,conf);
-      const q=document.createElement("div"); q.textContent=r.question || "Testo della domanda non riconosciuto.";
-      const ans=document.createElement("div"); ans.style.marginTop="9px";
-      const letter=document.createElement("span"); letter.className="letter"; letter.textContent=r.answer_letter ? `${r.answer_letter}.` : "";
-      const text=document.createElement("span"); text.className="answer-text"; text.textContent=r.answer_text || "DA VERIFICARE";
-      ans.append(letter,text);
-      article.append(top,q,ans);
-      if(r.explanation){const ex=document.createElement("p");ex.className="explain";ex.textContent=r.explanation;article.append(ex);}
-      if(r.calculation){const calc=document.createElement("div");calc.className="calc";calc.textContent=r.calculation;article.append(calc);}
-      if(r.warning){const warn=document.createElement("div");warn.className="flag";warn.textContent="⚠ "+r.warning;article.append(warn);}
-      $("results").append(article);
-    });
-    (data.general_notes || []).forEach(note => {
-      const p=document.createElement("p");p.className="flag";p.textContent="Nota generale: "+note;$("results").append(p);
-    });
-    $("resultsPanel").scrollIntoView({behavior:"smooth",block:"start"});
-  }
-
-  $("analyze").addEventListener("click", async () => {
-    const key=$("apiKey").value.trim();
-    if(!key){setStatus("Inserisci prima la chiave API Gemini.","error");$("apiKey").focus();return;}
-    if(!selected.length){setStatus("Carica almeno un'immagine.","error");return;}
-    $("analyze").disabled=true;
-    $("analyze").textContent="ANALISI IN CORSO…";
-    $("resultsPanel").classList.add("hidden");
-    setStatus("Preparo le immagini e invio i quesiti a Gemini. Con molte immagini potrebbe servire qualche minuto.");
-    try {
-      const parts=[{text:instruction}];
-      for(let i=0;i<selected.length;i++){
-        setStatus(`Preparo immagine ${i+1} di ${selected.length}…`);
-        const base64=await fileToData(selected[i]);
-        parts.push({text:`IMMAGINE ${i+1} — file: ${selected[i].name}`});
-        parts.push({inline_data:{mime_type:selected[i].type,data:base64}});
-      }
-      setStatus("Gemini sta leggendo e verificando i quesiti…");
-      const controller=new AbortController();
-      const timeout=setTimeout(()=>controller.abort(),180000);
-      let response;
-      try {
-        response=await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${MODEL}:generateContent`,{
-          method:"POST",
-          headers:{"Content-Type":"application/json","x-goog-api-key":key},
-          body:JSON.stringify({
-            contents:[{role:"user",parts}],
-            generationConfig:{
-              temperature:0.1,
-              responseMimeType:"application/json",
-              responseSchema:schema
-            }
-          }),
-          signal:controller.signal
+  // Converte file in Base64 per l'API di Gemini
+  function fileToGenerativePart(file) {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        const base64Data = reader.result.split(',')[1];
+        resolve({
+          inlineData: {
+            data: base64Data,
+            mimeType: file.type
+          }
         });
-      } finally { clearTimeout(timeout); }
-      const payload=await response.json().catch(()=>({}));
-      if(!response.ok){
-        const message=payload?.error?.message || `Errore HTTP ${response.status}`;
-        throw new Error(`${message} (controlla chiave, modello e quota API).`);
+      };
+      reader.onerror = reject;
+      reader.readAsDataURL(file);
+    });
+  }
+
+  // Costruisce il prompt esatto richiesto
+  function buildPrompt(numQuestions) {
+    return `AGISCI COME UN DOCENTE UNIVERSITARIO DI STATISTICA,
+LAUREATO IN STATISTICA, CON PREPARAZIONE AVANZATA
+IN STATISTICA MATEMATICA, INFERENZA STATISTICA,
+PROBABILITA', ECONOMETRIA E ANALISI DEI DATI.
+
+Il tuo compito è risolvere quiz universitari a risposta
+multipla con la MASSIMA PRECISIONE POSSIBILE.
+
+OBIETTIVO:
+Non devi rispondere velocemente sacrificando la precisione.
+Devi individuare la risposta scientificamente e
+matematicamente corretta.
+
+PROCEDURA OBBLIGATORIA PER OGNI DOMANDA:
+
+1. Leggi integralmente il testo della domanda.
+2. Analizza tutte le alternative A, B, C e D.
+3. Identifica l'argomento statistico specifico.
+4. Individua la definizione, la formula o il teorema
+   pertinente.
+5. Se la domanda contiene calcoli:
+   - individua i dati;
+   - applica la formula corretta;
+   - verifica i passaggi matematici;
+   - controlla il risultato numerico;
+   - considera eventuali arrotondamenti.
+6. Se la domanda riguarda una definizione:
+   - distingui i concetti simili;
+   - verifica le condizioni di validità;
+   - non confondere termini statistici.
+7. Esamina tutte le alternative.
+8. Elimina le risposte errate e individua quella corretta.
+9. Esegui una seconda verifica indipendente della risposta.
+10. Prima di confermare, verifica che la risposta scelta
+    corrisponda esattamente all'alternativa indicata.
+
+ATTENZIONE AI TRANELLI:
+
+- Confusione tra media, mediana e moda.
+- Confusione tra varianza e deviazione standard.
+- Confusione tra probabilità condizionata e indipendenza.
+- Confusione tra correlazione e causalità.
+- Confusione tra ipotesi nulla e alternativa.
+- Confusione tra errore di I tipo e II tipo.
+- Confusione tra campione e popolazione.
+- Confusione tra stimatore e stima.
+- Confusione tra distribuzioni statistiche.
+- Formule con denominatori differenti.
+- Segni, unità di misura e arrotondamenti.
+- Alternative quasi identiche.
+- Definizioni formulate in modo ingannevole.
+
+REGOLE:
+
+- Non scegliere una risposta soltanto perché sembra plausibile.
+- Non inventare dati mancanti.
+- Non ignorare nessuna alternativa.
+- Non rispondere prima di aver verificato.
+- Se una domanda è ambigua o illeggibile,
+  non inventare una soluzione.
+- Ogni immagine corrisponde a una domanda.
+- Mantieni l'ordine originale delle immagini.
+
+VERIFICA FINALE:
+
+Controlla nuovamente tutte le domande.
+Verifica la correttezza matematica e concettuale.
+Verifica che nessuna risposta sia stata associata
+alla domanda sbagliata.
+Verifica il numero totale delle risposte.
+
+FORMATO DI OUTPUT OBBLIGATORIO:
+
+1:A;2:C;3:B;4:D
+
+Restituisci ESCLUSIVAMENTE la stringa delle risposte.
+Nessuna spiegazione.
+Nessun commento.
+Nessun testo aggiuntivo.
+
+Numero di domande: ${numQuestions}`;
+  }
+
+  solveBtn.addEventListener('click', async () => {
+    const apiKey = document.getElementById('apiKey').value.trim();
+    const model = document.getElementById('modelSelect').value;
+
+    if (!apiKey) {
+      alert('Inserisci la tua Google Gemini API Key.');
+      return;
+    }
+
+    if (selectedFiles.length === 0) {
+      alert('Carica almeno un\'immagine contenente una domanda.');
+      return;
+    }
+
+    solveBtn.disabled = true;
+    loader.style.display = 'block';
+    resultBox.style.display = 'none';
+
+    try {
+      const promptText = buildPrompt(selectedFiles.length);
+      const imageParts = await Promise.all(selectedFiles.map(fileToGenerativePart));
+
+      const requestBody = {
+        contents: [
+          {
+            parts: [
+              { text: promptText },
+              ...imageParts
+            ]
+          }
+        ],
+        generationConfig: {
+          temperature: 0.1 // Bassa temperatura per massimo rigore analitico
+        }
+      };
+
+      const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(requestBody)
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error?.message || 'Errore durante la chiamata API');
       }
-      const data=extractResponse(payload);
-      renderResults(data);
-      setStatus("Analisi completata. Controlla le domande segnalate prima di usare le risposte.","ok");
-    } catch(err) {
-      let message=err.name==="AbortError" ? "La richiesta ha superato il tempo massimo. Prova con meno immagini per volta." : err.message;
-      setStatus("Errore: "+message,"error");
+
+      const answerText = data.candidates[0].content.parts[0].text.trim();
+      resultOutput.textContent = answerText;
+      resultBox.style.display = 'block';
+
+    } catch (error) {
+      alert('Errore: ' + error.message);
     } finally {
-      $("analyze").disabled=selected.length===0;
-      $("analyze").textContent="ANALIZZA LE DOMANDE";
+      solveBtn.disabled = false;
+      loader.style.display = 'none';
     }
   });
 
-  $("copy").addEventListener("click", async () => {
-    const text=lastResults.map((r,i)=>`${i+1}) ${r.answer_letter || "—"} — ${r.answer_text || "DA VERIFICARE"}\n${r.explanation || ""}${r.calculation ? "\n"+r.calculation : ""}${r.warning ? "\nATTENZIONE: "+r.warning : ""}`).join("\n\n");
-    try { await navigator.clipboard.writeText(text); $("copy").textContent="Copiato!"; setTimeout(()=>$("copy").textContent="Copia risposte",1600); }
-    catch { setStatus("Copia automatica non disponibile in questo browser.","error"); }
+  copyBtn.addEventListener('click', () => {
+    navigator.clipboard.writeText(resultOutput.textContent);
+    copyBtn.textContent = 'Copiato!';
+    setTimeout(() => copyBtn.textContent = 'Copia Risultato', 2000);
   });
-  $("print").addEventListener("click",()=>window.print());
-  window.addEventListener("beforeunload",()=>{$("apiKey").value="";});
-})();
 </script>
+
 </body>
 </html>
